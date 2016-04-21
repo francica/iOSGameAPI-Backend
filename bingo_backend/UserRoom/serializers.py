@@ -46,7 +46,8 @@ class UserManager(object):
 		if temp == None:
 			return ''
 		else:
-			return temp.name
+			return temp.name 
+
 
 
 class RoomManager(object):
