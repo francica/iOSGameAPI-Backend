@@ -116,14 +116,14 @@ class RoomManager(object):
 			ret = [int(each) for each in user_s if each]
 			return ret
 		except:
-			return None	
+			return -1	
 
 	def get_owner(self, room_id):
 		try:
 			temp = Room.objects.get(room_id = room_id)
 			return int(temp.owner_id)
 		except:
-			return None
+			return -1
 
 	def update_board(self, room_id, board_id):
 		try:
@@ -139,7 +139,7 @@ class RoomManager(object):
 			temp = Room.objects.get(room_id = room_id)
 			return int(temp.board_id)
 		except:
-			return None	
+			return -1	
 
 	def update_status(self, room_id, status):
 		try:

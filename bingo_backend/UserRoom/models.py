@@ -35,4 +35,5 @@ class Room(models.Model):
         ret['owner_id'] = self.owner_id
         ret['name'] = self.name
         ret['drawer'] = self.drawer
+        ret['board_id'] = self.board_id
         return ret
