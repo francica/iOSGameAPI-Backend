@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+# import json
 #from rest_framework import serializers
 
 # Create your models here.
@@ -19,3 +20,4 @@ class Room(models.Model):
     name = models.CharField(max_length = 100)
     game_status = models.BooleanField(default = False)
     drawer = models.IntegerField(default = 0)
+    scores = models.TextField(default = '')

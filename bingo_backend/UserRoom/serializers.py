@@ -15,7 +15,7 @@ class UserManager(object):
 			temp.save()
 			return temp.user_id
 		except:
-			return 0
+			return -1
 
 	def remove_user(self, user_id):
 		try:
@@ -23,7 +23,7 @@ class UserManager(object):
 			temp.delete()
 			return 1
 		except:
-			return 0
+			return -1
 
 	def get_score(self, user_id):
 		temp = User.objects.get(user_id = user_id)
@@ -35,9 +35,9 @@ class UserManager(object):
 	def score_update(self, user_id, score):
 		temp = User.objects.get(user_id = user_id)
 		if temp == None:
-			return 0
+			return -1
 		else:
-			temp.score += score
+			temp.score = score
 			temp.save()
 			return 1
 
@@ -63,7 +63,7 @@ class RoomManager(object):
 			temp.save()
 			return temp.room_id
 		except:
-			return 0
+			return -1
 
 	def remove_room(self, room_id):
 		try:
@@ -71,7 +71,7 @@ class RoomManager(object):
 			temp.delete()
 			return 1
 		except:
-			return 0	
+			return -1	
 
 	def add_player(self, user_id, room_id):
 		try:
@@ -82,7 +82,7 @@ class RoomManager(object):
 			temp.save()
 			return 1
 		except:
-			return 0
+			return -1
 
 	def remove_player(self, user_id, room_id):
 		try:
@@ -106,7 +106,7 @@ class RoomManager(object):
 			temp.save()
 			return 1
 		except:
-			return 0	
+			return -1	
 
 	def get_players(self, room_id):
 		try:
@@ -131,7 +131,7 @@ class RoomManager(object):
 			temp.save()
 			return 1
 		except:
-			return 0
+			return -1
 
 	def get_board(self, room_id):
 		try:
@@ -143,18 +143,23 @@ class RoomManager(object):
 	def update_status(self, room_id, status):
 		try:
 			temp = Room.objects.get(room_id = room_id)
+			
+			if status:
+				self.reset_ingame_score(room_id)
+
 			temp.game_status = status
 			temp.save()
+
 			return 1
 		except:
-			return 0
+			return -1
 
 	def get_status(self, room_id):
 		try:
 			temp = Room.objects.get(room_id = room_id)
 			return temp.game_status
 		except:
-			return 0
+			return -1
 
 	def update_drawer(self, room_id, drawer=None):
 		try:
@@ -163,21 +168,21 @@ class RoomManager(object):
 			temp.save()
 			return 1
 		except:
-			return 0
+			return -1
 
 	def get_drawer(self, room_id):
 		try:
 			temp = Room.objects.get(room_id = room_id)
 			return temp.drawer
 		except:
-			return 0
+			return -1
 
 	def get_name(self, room_id):
 		try:
 			temp = Room.objects.get(room_id = room_id)
 			return temp.name
 		except:
-			return 0
+			return -1
 
 	def get_number(self, room_id):
 		try:
@@ -186,4 +191,41 @@ class RoomManager(object):
 			temp_s = [each for each in temp_s if each]
 			return len(temp_s)
 		except:
-			return 0
+			return -1
+
+	def get_ingame_score(self, room_id, user_id):
+		try:
+			temp = Room.objects.get(room_id = room_id)
+			scores = eval(temp.scores)
+			score = scores[str(user_id)]
+			return score
+		except:
+			return -1
+
+	def update_ingame_score(self, room_id, user_id, score):
+		try:
+			temp = Room.objects.get(room_id = room_id)
+			scores = eval(temp.scores)
+			scores[str(user_id)] = score
+			temp.scores = str(scores)
+			temp.save()
+			return 1
+		except:
+			return -1
+
+	def reset_ingame_score(self, room_id):
+		try:
+			temp = Room.objects.get(room_id = room_id)
+			players = self.get_players(room_id)
+
+			scores = {}
+			for each in players:
+				scores[str(each)] = 0
+
+			temp.scores = str(scores)
+			temp.save()
+			return 1
+		except:
+			return -1
+		
+
